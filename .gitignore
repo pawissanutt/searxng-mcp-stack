@@ -1,0 +1,6 @@
+.env
+searxng-config/secret_key
+searxng-config/settings.rendered.yml
+tests/node_modules/
+tests/package-lock.json
+.omo/

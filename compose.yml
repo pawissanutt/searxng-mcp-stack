@@ -1,0 +1,79 @@
+# Podman-friendly 3-service stack: searxng + valkey + mcp-searxng.
+# Image tags come from .env (see .env.example) — never pin :latest here.
+# All host ports bind to 127.0.0.1 only; valkey has no host port at all.
+# SELinux :Z labels are required on bind mounts so podman relabels them
+# when running on SELinux-enforcing hosts (Fedora/RHEL).
+#
+# depends_on uses the short list form on purpose: older podman-compose
+# does not honor `condition: service_healthy`, so we rely on restart
+# policies + healthchecks for actual readiness gating.
+
+services:
+  searxng:
+    image: docker.io/searxng/searxng:${SEARXNG_IMAGE_TAG}
+    container_name: searxng
+    restart: unless-stopped
+    depends_on:
+      - valkey
+    networks:
+      - searxng-net
+    ports:
+      - "127.0.0.1:${SEARXNG_PORT}:8080"
+    environment:
+      SEARXNG_SECRET_KEY: ${SEARXNG_SECRET_KEY}
+      SEARXNG_VALKEY_URL: valkey://valkey:6379/0
+    volumes:
+      - ./searxng-config/settings.rendered.yml:/etc/searxng/settings.yml:Z
+      - ./searxng-config/limiter.toml:/etc/searxng/limiter.toml:Z
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8080/healthz"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 15s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  valkey:
+    image: docker.io/valkey/valkey:${VALKEY_IMAGE_TAG}
+    container_name: valkey
+    restart: unless-stopped
+    networks:
+      - searxng-net
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 15s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  mcp-searxng:
+    image: docker.io/isokoliuk/mcp-searxng:${MCP_SEARXNG_IMAGE_TAG}
+    container_name: mcp-searxng
+    restart: on-failure:5
+    depends_on:
+      - searxng
+    networks:
+      - searxng-net
+    ports:
+      - "127.0.0.1:${MCP_HTTP_PORT}:${MCP_HTTP_PORT}"
+    environment:
+      SEARXNG_URL: http://searxng:8080
+      MCP_HTTP_PORT: ${MCP_HTTP_PORT}
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  searxng-net:
+    driver: bridge

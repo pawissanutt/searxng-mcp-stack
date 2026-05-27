@@ -1,0 +1,19 @@
+[real_ip]
+# Number of trusted reverse proxies in front. We have none (pod-internal traffic only).
+x_for = 0
+ipv4_prefix = 32
+ipv6_prefix = 56
+
+[botdetection.ip_limit]
+# Disable JS-challenge bot detection that breaks headless clients.
+link_token = false
+
+[botdetection.ip_lists]
+# Whitelist pod-internal CIDR ranges so MCP server is never rate-limited.
+# Adjust via SEARXNG_TRUSTED_CIDR in .env if your podman network uses different CIDRs.
+pass_ip = [
+  "10.0.0.0/8",
+  "172.16.0.0/12",
+  "192.168.0.0/16",
+]
+block_ip = []

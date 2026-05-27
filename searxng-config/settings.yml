@@ -1,0 +1,25 @@
+use_default_settings: true
+
+general:
+  instance_name: "searxng-mcp-stack local"
+
+search:
+  formats:
+    - html
+    - json
+  safe_search: 0
+
+server:
+  secret_key: "__SEARXNG_SECRET_KEY__"
+  limiter: true
+  public_instance: false
+  image_proxy: false
+  bind_address: "0.0.0.0"
+  port: 8080
+
+valkey:
+  url: valkey://valkey:6379/0
+
+outgoing:
+  request_timeout: 5.0
+  max_request_timeout: 15.0

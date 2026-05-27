@@ -1,0 +1,12 @@
+{
+  "name": "searxng-mcp-stack-e2e",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "e2e": "node e2e.mjs"
+  },
+  "description": "Real end-to-end MCP-SDK smoke test against the live stack. Pinned to the same SDK pin as Task 1 (1.29.0) so the import resolution matches what was validated in the spike.",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0"
+  }
+}
