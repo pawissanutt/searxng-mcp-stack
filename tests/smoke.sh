@@ -6,8 +6,8 @@ cd "$REPO_ROOT" || exit 1
 set -a; # shellcheck source=/dev/null
 . "${REPO_ROOT}/.env"; set +a
 UA='Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0'
-S="http://127.0.0.1:${SEARXNG_PORT:-8080}"
-M="http://127.0.0.1:${MCP_HTTP_PORT:-3000}/mcp"
+S="http://127.0.0.1:${SEARXNG_PORT:-28080}"
+M="http://127.0.0.1:${MCP_HTTP_PORT:-23000}/mcp"
 f=0
 # Probe 1: SearXNG /healthz → body OK
 if b="$(curl -fsS -A "$UA" "${S}/healthz" 2>/dev/null)" && [ "$b" = "OK" ]; then

@@ -90,7 +90,7 @@ podman-compose up -d
 # Any failure (connection refused, HTTP 5xx, malformed body, empty tools
 # array) simply triggers another retry until the 60-second deadline.
 # ---------------------------------------------------------------------------
-MCP_PORT="${MCP_HTTP_PORT:-3000}"
+MCP_PORT="${MCP_HTTP_PORT:-23000}"
 MCP_URL="http://127.0.0.1:${MCP_PORT}/mcp"
 DEADLINE=$(( $(date +%s) + 60 ))
 

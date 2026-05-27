@@ -6,7 +6,7 @@
 // any failure surfaces as a real integration regression.
 //
 // Pass criteria (in order):
-//   1. Client connects to http://127.0.0.1:${MCP_HTTP_PORT||3000}/mcp.
+//   1. Client connects to http://127.0.0.1:${MCP_HTTP_PORT||23000}/mcp.
 //   2. tools/list contains BOTH `searxng_web_search` and `web_url_read`.
 //   3. searxng_web_search({query:"github"}) returns content[0].text that
 //      matches the /https?:\/\// regex (i.e. a real result with a URL).
@@ -31,7 +31,7 @@ const TIMEOUT = setTimeout(() => {
 }, 30000);
 TIMEOUT.unref?.();
 
-const PORT = process.env.MCP_HTTP_PORT || "3000";
+const PORT = process.env.MCP_HTTP_PORT || "23000";
 const ENDPOINT = `http://127.0.0.1:${PORT}/mcp`;
 
 let client;

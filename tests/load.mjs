@@ -6,7 +6,7 @@ import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/
 const T = setTimeout(() => { console.error("[load] FAIL: timeout 60s"); process.exit(1); }, 60000);
 T.unref?.();
 
-const PORT = process.env.MCP_HTTP_PORT || "3000";
+const PORT = process.env.MCP_HTTP_PORT || "23000";
 const ENDPOINT = `http://127.0.0.1:${PORT}/mcp`;
 const POOL = ["github","openai","podman","valkey","linux","python","rust","node","docker","search"];
 

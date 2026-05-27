@@ -10,7 +10,17 @@ set -euo pipefail
 IFS=$'\n\t'
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PORT="${MCP_HTTP_PORT:-3000}"
+
+# Inherit MCP_HTTP_PORT from the repo's .env (single source of truth shared
+# with compose.yml + up.sh). Fall back to the documented default if .env is
+# absent or doesn't pin the var.
+if [[ -f "${REPO_ROOT}/.env" ]]; then
+  set -a
+  # shellcheck source=/dev/null
+  . "${REPO_ROOT}/.env"
+  set +a
+fi
+PORT="${MCP_HTTP_PORT:-23000}"
 URL="http://127.0.0.1:${PORT}/mcp"
 
 # Per-repo lock path (hash REPO_ROOT so multiple checkouts don't collide).

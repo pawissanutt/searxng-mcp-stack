@@ -14,7 +14,17 @@ set -euo pipefail
 IFS=$'\n\t'
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PORT="${MCP_HTTP_PORT:-3000}"
+
+# Inherit MCP_HTTP_PORT from the repo's .env so opencode picks up custom
+# ports without per-session env overrides. Fall back to the documented
+# default if .env is absent.
+if [[ -f "${REPO_ROOT}/.env" ]]; then
+  set -a
+  # shellcheck source=/dev/null
+  . "${REPO_ROOT}/.env"
+  set +a
+fi
+PORT="${MCP_HTTP_PORT:-23000}"
 URL="http://127.0.0.1:${PORT}/mcp"
 
 "${REPO_ROOT}/scripts/ensure.sh"

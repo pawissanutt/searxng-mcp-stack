@@ -12,7 +12,7 @@ UA='Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0'
 # Probe searxng
 searxng_status="down"
 if podman ps --filter 'name=^searxng$' --filter 'status=running' --format '{{.Names}}' 2>/dev/null | grep -q '^searxng$'; then
-  if curl -fsS -A "$UA" "http://127.0.0.1:${SEARXNG_PORT:-8080}/healthz" >/dev/null 2>&1; then
+  if curl -fsS -A "$UA" "http://127.0.0.1:${SEARXNG_PORT:-28080}/healthz" >/dev/null 2>&1; then
     searxng_status="ok"
   else
     searxng_status="degraded"
@@ -32,13 +32,13 @@ fi
 # Probe mcp-searxng (requires initialize handshake for session)
 mcp_status="down"
 if podman ps --filter 'name=^mcp-searxng$' --filter 'status=running' --format '{{.Names}}' 2>/dev/null | grep -q '^mcp-searxng$'; then
-  mcp_session_id="$(curl -fsS -D - -X POST "http://127.0.0.1:${MCP_HTTP_PORT:-3000}/mcp" \
+  mcp_session_id="$(curl -fsS -D - -X POST "http://127.0.0.1:${MCP_HTTP_PORT:-23000}/mcp" \
       -H 'Content-Type: application/json' \
       -H 'Accept: application/json, text/event-stream' \
       -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"status-probe","version":"0.1.0"}}}' 2>/dev/null \
       | grep -i '^mcp-session-id:' | head -1 | sed 's/^[Mm]cp-[Ss]ession-[Ii]d:[[:space:]]*//' | tr -d '[:space:]')"
   if [ -n "$mcp_session_id" ]; then
-    if curl -fsS -X POST "http://127.0.0.1:${MCP_HTTP_PORT:-3000}/mcp" \
+    if curl -fsS -X POST "http://127.0.0.1:${MCP_HTTP_PORT:-23000}/mcp" \
         -H 'Content-Type: application/json' \
         -H 'Accept: application/json, text/event-stream' \
         -H "Mcp-Session-Id: $mcp_session_id" \
