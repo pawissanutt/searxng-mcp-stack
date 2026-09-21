@@ -68,6 +68,9 @@ services:
     environment:
       SEARXNG_URL: http://searxng:8080
       MCP_HTTP_PORT: ${MCP_HTTP_PORT}
+      # mcp-searxng >= 2.0 binds 127.0.0.1 by default; must bind all container
+      # interfaces so the published host port can reach it.
+      MCP_HTTP_HOST: 0.0.0.0
     logging:
       driver: json-file
       options:

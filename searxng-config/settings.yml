@@ -23,3 +23,17 @@ valkey:
 outgoing:
   request_timeout: 5.0
   max_request_timeout: 15.0
+
+engines:
+  - name: bing
+    disabled: false
+  - name: mojeek
+    disabled: false
+  - name: wikipedia
+    disabled: false
+  - name: startpage
+    disabled: true
+  - name: qwant
+    disabled: true
+  - name: yahoo
+    disabled: true

@@ -1,8 +1,9 @@
-[real_ip]
-# Number of trusted reverse proxies in front. We have none (pod-internal traffic only).
-x_for = 0
+[botdetection]
+# No reverse proxy in front of SearXNG (pod-internal traffic only), so the
+# direct peer address is the client IP and no proxy is trusted for X-Forwarded-For.
 ipv4_prefix = 32
 ipv6_prefix = 56
+trusted_proxies = []
 
 [botdetection.ip_limit]
 # Disable JS-challenge bot detection that breaks headless clients.
